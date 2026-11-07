@@ -375,7 +375,6 @@ inference do not guarantee secure erasure or OS/model-server privacy.
 Using the published BSD-3-Clause SDK and stock firmware preserves the current
 open-source approach. Keep the eventual physical transport separate from the
 provider and HUD logic, as the current transport boundary already permits. No
-Noa-specific cloud dependency is needed. The app currently has no declared license
-field or standalone LICENSE file; select an explicit project license before
-redistributing it as an open-source release. This audit does not select a license
-on the owner's behalf. [SDK license](https://github.com/brilliantlabsAR/brilliant_sdk/blob/9d17e96ce1b0f1d33d270315a3816d2e8cd0523b/LICENSE).
+Noa-specific cloud dependency is needed. At the time of the hardware audit, the app had no declared license.
+The subsequent licensing update applies [Apache-2.0](LICENSE) to Quiet Glasses;
+third-party components retain their original terms. [SDK license](https://github.com/brilliantlabsAR/brilliant_sdk/blob/9d17e96ce1b0f1d33d270315a3816d2e8cd0523b/LICENSE).

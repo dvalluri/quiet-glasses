@@ -68,4 +68,10 @@ Historical captures are kept under `artifacts/real-demo/`: `01-blank.png`, `02-f
 
 Read [architecture](docs/ARCHITECTURE.md), [testing](docs/TESTING.md), and [hardware readiness](docs/HARDWARE.md) before modifying the host/device protocol. Run the existing suite after changes; report environment and evidence separately for emulator and hardware results. Prefer a small, complete prototype over extra infrastructure.
 
-This snapshot has no project LICENSE, repository remote, accessible Git history, CI configuration, or dependency lockfile. Public open-source release requires the owner to choose a license and publish the source; dependency licenses remain separate. No application source was changed for this documentation handoff.
+Source is published at [dvalluri/quiet-glasses](https://github.com/dvalluri/quiet-glasses). CI configuration and a dependency lockfile have not been added.
+
+## License
+
+Copyright 2026 Dinesh Valluri. Quiet Glasses is licensed under the [Apache License 2.0](LICENSE); see [NOTICE](NOTICE) for attribution.
+
+Commercial use, modification, and distribution are permitted, including proprietary products, subject to the license's notice and redistribution requirements. The license includes an explicit contributor patent grant and does not require publishing modifications. These permissions apply to everyone, including commercial competitors, and already granted permissions cannot simply be withdrawn. Third-party dependencies, fonts, services, and model weights retain their own terms.

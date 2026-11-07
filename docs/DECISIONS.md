@@ -9,7 +9,7 @@ These document the requested product direction and its relationship to the audit
 | Local-first AI where practical | Loopback-only SSE keeps the application request local; model server behavior remains outside app control |
 | Existing SDKs/libraries preferred | Use official Halo emulator, httpx and pygame; physical work should use the existing BLE SDK |
 | Hardware-agnostic software where feasible | Provider/HUD responsibilities are separate, but transport construction and Lua APIs remain Halo-specific; portability is a goal, not a delivered abstraction |
-| Open-source development | Publish understandable source and reproducible results; project license and authoritative remote are missing from this snapshot |
+| Open-source development | Publish understandable source and reproducible results under Apache-2.0; third-party components retain their own licenses |
 | One physical prototype initially | Validate optics and transport before buying multiple devices |
 | Product completion before extra complexity | Complete the smallest working physical text experience before broader platform work |
 | Privacy and user control | Explicit activation, no automatic conversation files, loopback endpoint restriction and deliberate screenshot saving |

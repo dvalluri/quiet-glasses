@@ -13,7 +13,7 @@ Milestones below are evidence-based states, not promised dates.
 
 ## Current state
 
-A Linux/POSIX emulator demonstration is reproducible with the installed environment. A clean online installation remains to be verified. No physical deployment has been established. Before public release, choose a project license, establish a source remote/history and decide how to distribute ignored experiment artifacts. No application features were added in the documentation audit.
+A Linux/POSIX emulator demonstration is reproducible with the installed environment. A clean online installation remains to be verified. No physical deployment has been established. The source is now published under Apache-2.0, with showcase captures bundled in docs/assets. Distribution of the remaining ignored experiment artifacts is still to be decided. No application features were added in the documentation audit.
 
 ## Next milestone: one physical prototype
 

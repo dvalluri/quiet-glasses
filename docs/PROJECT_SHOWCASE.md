@@ -230,18 +230,18 @@ The immediate aim is to build something useful and enjoyable, not to launch a
 company or raise investment. Hardware partnerships or commercialization are
 optional future directions, not established plans.
 
-This is a personal project pursuing open-source development. The visible snapshot
-has no project license or verified public repository URL; the owner must resolve
-those before presenting it as a fully published open-source release. Prospective
-contributors can obtain the source from the maintainer, follow [setup](SETUP.md),
+This is a personal open-source project under the [Apache License 2.0](../LICENSE),
+with source at [dvalluri/quiet-glasses](https://github.com/dvalluri/quiet-glasses).
+Commercial use is permitted; third-party components retain their own terms.
+Prospective contributors can obtain the source, follow [setup](SETUP.md),
 and run `./launch --provider mock` after installation. Tests run with
 `.venv/bin/python -m pytest -q`.
 
 The [README handoff](../README.md#handoff-and-contribution) favors small, complete
 changes and clear separation of emulator and hardware evidence. Useful
 contributions include reproducible usability observations, reader interaction
-proposals, or a focused device integration. There is no contribution portal to
-invent here.
+proposals, or a focused device integration. GitHub issues and pull requests provide
+a place to share the work.
 
 Local-first is a practical preference, not a privacy guarantee. The current app
 restricts model requests to loopback and does not automatically save conversations;
