@@ -1,22 +1,24 @@
-# Session service v0.1
+# App — agreement v0.1
 
-Owner: Session Codex agent. Initial shared-file custodian: integrator.
+Handles asking, dismissing, and replacing a question. Keeps the current answer moving through the app and stops an old answer from coming back.
+
+Assigned Codex agent: App. The coordinating agent handles the shared file until it is split.
 
 ## Boundary
 
-Inputs: start, explicit activation with a nonblank question or Content TextTask, dismissal, close, provider chunks, display events, and transport failures.
+Inputs: start, explicit activation with a nonblank question or Reader TextTask, dismissal, close, provider chunks, display events, and transport failures.
 
-Outputs: lifecycle status and timing/error metadata; calls to Inference; versioned activation/snapshot/clear commands to Display through its backend. No prompt/answer logging by default.
+Outputs: lifecycle status and timing/error metadata; calls to AI; versioned activation/snapshot/clear commands to Screen through its backend. No prompt/answer logging by default.
 
 Existing public surface to preserve during extraction:
 `start()`, `activate(prompt) -> asyncio.Task`, `dismiss()`, `close()`.
-The Content task input is a proposed extension behind an adapter, not an existing API.
+The Reader task input is a proposed extension behind an adapter, not an existing API.
 
 ## Obligations
 
 - Serialize activation/replacement/dismissal; allocate strictly increasing generations.
 - Clear the old request before activating a new one. Cancel its producer, and reject its late output even if cancellation is ignored.
-- Bound text accumulation to the existing 4096-character window; delegate layout to Display policy. Maintain one outstanding draw acknowledgement and the current 30 Hz maximum redraw rate.
+- Bound text accumulation to the existing 4096-character window; delegate layout to Screen policy. Maintain one outstanding draw acknowledgement and the current 30 Hz maximum redraw rate.
 - Queue remote clear before awaiting provider cleanup. Target cleanup has a separate 1-second budget; timeout is reported.
 - On local dismissal, mark the generation inactive immediately and cancel upstream work; do not wait for a host round trip to clear.
 - Surface receive-task failure to lifecycle/UI status immediately. Do not leave a dead receiver masquerading as a running request.

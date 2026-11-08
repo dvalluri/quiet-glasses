@@ -1,23 +1,24 @@
-# Quiet Glasses agent instructions
+# Working on Quiet Glasses
 
-Dinesh is the principal. The coordinating Codex agent is the integrator. Each assigned Codex worker owns one service contract; worker identities are per-run, while the roles below persist.
+Dinesh decides what the product should do and whether the demonstrated experience is useful. The coordinating Codex agent assigns small tasks and puts the pieces together. Other Codex agents own a named part: **App, AI, Connection, Screen, Reader, or Testing**.
 
-Read [team and dispatch](docs/AGENT_TEAM.md), [shared contracts](docs/contracts/SHARED.md), and your assigned service contract before changes. Existing runtime behavior is documented in [architecture](docs/ARCHITECTURE.md); proposed contracts are not evidence that new interfaces exist.
+Read [who does what](docs/AGENT_TEAM.md), [shared rules](docs/contracts/SHARED.md), and the agreement for your assigned part. [Architecture](docs/ARCHITECTURE.md) describes the code today; the proposed boundaries are not claims that new code exists.
 
-## Working rules
+## Rules for the work
 
-- Work on the smallest assigned acceptance slice. Prefer integration, repeatable tests, and a usable single prototype.
-- The integrator may delegate independent work to service agents and coordinate isolated branches/worktrees. One owner edits each file. Do not delegate speculative feature expansion.
-- Until extraction is explicitly assigned, only the integrator edits `quiet_glasses/core.py`. It currently combines session, layout, and transport.
-- Routine compatible implementation decisions belong to agents and the integrator. Dinesh owns product priorities, target wearable, experience, and incompatible contract changes. Bring a concrete proposed change and tradeoff when principal direction is needed.
-- Shared contracts and composition-root changes belong to the integrator. Never silently change another service's input, output, failure, or ordering semantics.
-- Keep one runnable application with local interfaces and existing SDKs. Separate processes, network APIs, queues, and deployment infrastructure need a demonstrated requirement.
-- Device-local dismissal must not depend on inference, a host response, or a successful notification. Suppress stale results after dismissal.
-- Preserve explicit LOCAL / MOCK / MOCK FALLBACK provenance. No silent synthetic success.
-- Label evidence by environment and provenance. Emulator tests, SDK capabilities, and drawing acknowledgements do not establish physical compatibility or readability.
-- Run checks appropriate to changed behavior. Document commands and failures. Hardware acceptance remains blocked without physical observations.
-- Do not merge or declare a release accepted merely because a service agent says done. The integrator assembles a candidate and independent verification report.
+- Work on the smallest assigned task that helps finish one usable prototype. Prefer integration and testing over more features.
+- The coordinating agent can delegate independent tasks. Give each file one editor; use separate branches/worktrees when needed.
+- Only the coordinating agent edits `quiet_glasses/core.py` until its App, Screen, and Connection code has been separated.
+- Agents make routine compatible implementation choices. Bring Dinesh a concrete proposal and tradeoff when product behavior, target hardware, or an incompatible shared interface must change.
+- Keep one runnable app, with small local interfaces and existing SDKs. Add separate processes or infrastructure only for a demonstrated need.
+- Screen must clear locally without waiting for AI, the host, or a successful notification. Old answers must not reappear after dismissal.
+- Preserve LOCAL / MOCK / MOCK FALLBACK labels. A synthetic answer is not successful model inference.
+- Record where and how a test ran. Emulator results, SDK descriptions, and drawing acknowledgements do not establish physical readability or compatibility.
+- Run checks appropriate to changed behavior. Record failures and missing prerequisites; physical acceptance needs physical observations.
+- Do not merge or declare a release accepted just because an agent says done. Assemble a candidate and get an independent test report.
 
-## Handoff
+## Task handoff
 
-Every worker returns: service and contract version; base and result commit; owned files changed; acceptance criteria with pass/fail/blocked evidence; limitations; dependency requests; and the smallest remaining action. See the dispatch template in the team document.
+State the part and task, starting revision, allowed files, expected inputs/outputs, test for completion, and what is out of scope.
+
+Return the result revision, changed files, pass/fail/blocked checks with evidence, limitations, dependencies, and the smallest remaining action. Agents run for assigned tasks, not continuously in the background.

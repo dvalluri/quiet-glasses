@@ -1,6 +1,8 @@
-# Transport service v0.1
+# Connection — agreement v0.1
 
-Owner: Transport Codex agent.
+Carries commands and text to the selected headset/backend, brings events back, and reports a broken connection.
+
+Assigned Codex agent: Connection.
 
 ## Boundary
 
@@ -25,4 +27,4 @@ After extraction: `quiet_glasses/transports/`, assigned transport tests and back
 
 Checks: complete-message round trip; oversize rejection; startup failure; receiver failure; fragmentation boundaries where supported; disconnect and bounded cleanup; no reconnect replay. Emulator tests do not establish physical message delivery.
 
-First dispatch: identify and reproduce the existing Quest browser path with Display, documenting host↔browser delivery and limitations. Quest is a distinct backend; the Halo ASCII adapter remains supported for emulator testing. Park physical Halo implementation until it is the chosen target.
+First dispatch: identify and reproduce the existing Quest browser path with Screen, documenting host↔browser delivery and limitations. Quest is a distinct backend; the Halo ASCII adapter remains supported for emulator testing. Park physical Halo implementation until it is the chosen target.

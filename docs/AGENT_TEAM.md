@@ -1,73 +1,76 @@
-# Quiet Glasses: principal and agent team
+# Who does what
 
-Status: proposed service boundaries v0.1, prepared 2026-11-08. This change defines contracts and dispatch instructions; it does not refactor runtime code or establish new hardware results.
+This is a proposed way to divide the work, written on 2026-11-08. The app has not been split into these parts yet.
 
-## Authority
+**You decide what Quiet Glasses should do and whether it feels useful. I coordinate the work and put the pieces together.** Each Codex agent gets one part, a small task, and a clear test for being done.
 
-Dinesh is the principal: product purpose, priorities, target wearable, user experience, acceptance of demonstrated usability, and incompatible interface changes.
+## The six parts
 
-The coordinating Codex agent is the integrator: translates the chosen milestone into bounded assignments, resolves dependencies, owns shared contracts and wiring, reviews work, and assembles one runnable candidate. Routine compatible changes proceed within the assigned scope. Verification reports evidence independently; it cannot waive a failed criterion.
+| Name | What it does | What it hands to the next part |
+| --- | --- | --- |
+| **App** | Handles “ask,” “dismiss,” and replacing one question with another. Stops old work so old answers cannot reappear. | A current request, or a clear/stop instruction |
+| **AI** | Talks to Ollama and receives the answer a little at a time. Reports when the model fails or when a mock is being used. | Answer text, completion, or an error |
+| **Connection** | Gets commands and text from the host to the selected headset/backend, and brings events back. | Delivered messages, replies, or a connection error |
+| **Screen** | Fits text on the display, draws it, and clears it when dismissed—even if the host is stuck. | Display/input events and visible results to test |
+| **Reader** | Eventually loads a document, prepares pages, or prepares a translation/field-guide request. For now, supplies test text only. | Prepared text or a question with its source |
+| **Testing** | Tries the assembled app, checks failure cases, and records what actually worked on each device. | Pass/fail/blocked results with evidence |
 
-Service agents own implementation choices inside their contract. They do not invent product requirements, change peers' interfaces, or declare their own physical compatibility. Roles persist in the repository; Codex workers are launched for specific tasks, not continuously running background services.
+These names describe parts of one app. Codex agents work on them when assigned a task; the product does not require six agents running while you use it.
 
-## Ownership and contracts
+## One example
 
-| Service / Codex role | Input → output | Exclusive responsibility | Contract |
-| --- | --- | --- | --- |
-| Session | User action + text task → lifecycle, display commands, status | One active request, ordering, cancellation, deadlines | [Session](contracts/SESSION.md) |
-| Content | Explicit content request → literal text or inference task | Source identity, mode validation, output constraints | [Content](contracts/CONTENT.md) |
-| Inference | Prompt → asynchronous content chunks | Local-model integration, completion, provider provenance | [Inference](contracts/INFERENCE.md) |
-| Transport | Complete message bytes → complete replies or transport error | Connection, SDK deployment, framing, bounded delivery | [Transport](contracts/TRANSPORT.md) |
-| Display | Versioned display commands + local input → pixels and events | Layout, blank state, rendering, local dismissal, stale suppression | [Display](contracts/DISPLAY.md) |
-| Verification | Candidate + acceptance profile → evidence report | Independent integration checks and claim limits | [Verification](contracts/VERIFICATION.md) |
+You ask “What does this sign mean?”
 
-These are independently owned logical services in one application. Start with direct calls and the current device protocol. The existing external AI server remains behind Inference. The agents build and maintain the components; they are not needed for runtime operation.
+- **App** starts the request and cancels an older one.
+- **Reader**, once that feature exists, prepares the supplied sign text and requested language. Reading the camera image/OCR is not built yet.
+- **AI** generates the answer.
+- **Connection** carries updates to the selected headset/backend.
+- **Screen** shows the text. If you dismiss it, Screen clears locally; App stops the answer and rejects late updates.
+- **Testing** checks that this sequence actually works, including when AI or the connection fails.
 
-## Current mapping and file ownership
+That is the intended flow. The current prototype supports asking a text question and showing streamed text in the Halo emulator; general sign translation is not implemented.
 
-| Existing location | Current behavior | Owner before extraction | Proposed location after extraction |
-| --- | --- | --- | --- |
-| `quiet_glasses/core.py` | HUD, layout, emulator transport | Integrator only | `session.py`, `rendering.py`, `transports/emulator.py` |
-| `quiet_glasses/providers.py` | Mock/local providers and selection | Inference | Same |
-| `quiet_glasses/device/main.lua` | Halo Lua rendering and input | Display | Same |
-| `quiet_glasses/cli.py`, `launch`, packaging | Application wiring and startup | Integrator | Same |
-| No content module | Generic question passed to provider | Content proposes; no runtime edits yet | `quiet_glasses/content/` |
-| Existing tests and verification script | Unit/contract tests and desktop demo | Assign individual files before edits | Owner unit tests; Verification integration tests |
+## Where the code lives
 
-The integrator mechanically extracts shared code before parallel implementation touches it. Extraction must preserve the existing imports through a compatibility shim or update all internal consumers together. Display owns layout policy after extraction; Transport cannot truncate content to satisfy delivery limits. Existing test files also require one assigned editor each.
+| Code today | Responsible agent | Intended home after the first extraction |
+| --- | --- | --- |
+| HUD in `quiet_glasses/core.py` | App | `quiet_glasses/session.py` |
+| Layout in `quiet_glasses/core.py` and device Lua | Screen | `quiet_glasses/rendering.py`, `quiet_glasses/device/` |
+| Emulator transport in `quiet_glasses/core.py` | Connection | `quiet_glasses/transports/emulator.py` |
+| `quiet_glasses/providers.py` | AI | Same |
+| No document-reading module yet | Reader, parked | `quiet_glasses/content/` |
+| Integration tests, demo checks, evidence | Testing | Existing tests/scripts/docs plus assigned additions |
+| CLI, launch, shared interfaces, wiring | Me, coordinating | Existing composition code |
 
-## Evidence baseline
+For now only I edit `core.py`, because it holds three of these parts. I extract those boundaries before assigning overlapping code work. Each test file also has one editor at a time.
 
-At source revision `83a86b2fa5b91891fd1c6b8486e28f82fd3ee80a`, repository documentation records 23 tests passing on November 6, a historical real Ollama desktop demonstration, and emulator-only Halo transport. These checks were not rerun to produce these contracts.
+## What we do next
 
-The latest conversation records a Quest 3S browser passthrough demonstration: classify as quest-browser / user-reported, not native Quest evidence. No Quest implementation or reproducible Quest procedure was found in this repository during this review. Physical Halo transport, optics, and button behavior remain unverified.
+One goal: **a repeatable text interaction on one wearable.** The working target is your Quest 3S, following the latest discussion. Connection and Screen first reproduce the reported browser demo and identify the smallest reliable path. Browser and native results are recorded separately. Halo hardware work stays parked.
 
-## First dispatch
+| Part | First task |
+| --- | --- |
+| App | Preserve the existing behavior while separating the shared code |
+| AI | Keep the current Ollama interface and provide a clearly labelled deterministic mock |
+| Connection | Establish a reproducible way to get text to the chosen wearable/backend |
+| Screen | Show one short text and make local dismissal work while the host is stalled |
+| Reader | Supply a public test sentence and one question; then stay parked |
+| Testing | Check the software baseline, then record the same interaction on the wearable |
 
-Current milestone: one repeatable wearable text interaction. Working target is the already-owned Quest 3S, following the latest project discussion; Halo implementation remains parked. Native Quest rendering is a proposed path, not an established dependency. Transport and Display first identify the smallest reproducible path from the reported browser demo and report any required platform decision with evidence. Do not build two backends concurrently.
+Provisional test: blank startup → explicitly requested text → readable display → local dismissal → late text cannot bring it back. Try ten cycles. The proposed application-input-to-clear target is 250 ms; this is not a measurement or an approved usability threshold. Measure physical gesture recognition delay separately. Only after static text works do we attach streamed AI.
 
-1. Integrator: preserve the emulator baseline and perform a behavior-preserving extraction only when implementation starts.
-2. Content: supply one short public ASCII fixture and one bounded question; reader, translation, and guide modes stay disabled.
-3. Inference: document the existing provider boundary and supply deterministic mock behavior; do not add models.
-4. Transport + Display: reproduce the selected wearable path, then static text and local dismissal. First establish the adapter seam; a Quest browser is a separate backend, not Halo Lua running on Quest.
-5. Verification: prepare the acceptance profile and reproduce software checks when the environment supports them; record hardware-dependent checks as blocked.
-6. Integrator: assemble one candidate; after static text succeeds, attach the existing streamed provider and repeat the same interaction.
+OCR, translation, diagrams, navigation, and world anchoring wait until that interaction works.
 
-Provisional acceptance profile v0.1 (engineering targets, not measured results or principal-approved usability thresholds): blank startup; explicit activation; one readable short text; local dismissal while host/provider is stalled; late updates cannot redisplay; ten repeated cycles with results recorded. Target application-observed input → blank is at most 250 ms, to be measured rather than assumed. Record physical gesture → callback delay separately. Human observation is required for readability. A browser-panel pass must be named as such; native spatial or Halo compatibility requires its own evidence.
+## What “done” means
 
-## Assignment and report template
+An agent returns its changed files/revision, the test it ran, the actual result, what remains blocked, and the smallest next action. A compatible implementation choice is the agent's to make. If a change affects what you see, the chosen hardware, or another part's agreed interface, I bring you the concrete change and tradeoff.
 
-```text
-Assignment: <service role, contract v0.1, bounded task>
-Base revision / branch:
-Allowed files:
-Dependencies / frozen inputs:
-Required outputs:
-Acceptance commands or manual steps:
-Out of scope:
-Report: result commit; changed files; pass/fail/blocked criteria;
-        environment + provenance; evidence paths; limitations;
-        dependency requests; smallest next action.
-```
+I assemble a runnable candidate; Testing checks it; you judge whether the demonstrated experience is useful. Passing emulator tests does not establish a working physical headset.
 
-The integrator consolidates this into the weekly status: demonstrated functionality, actual wearable observations, blockers, and one next milestone. No new evidence means no claimed progress.
+Current evidence: repository revision `83a86b2fa5b91891fd1c6b8486e28f82fd3ee80a` records 23 tests passing on November 6, historical real-Ollama desktop output, and Halo emulator behavior. These tests were not rerun for the naming change. The Quest browser demo is user-reported; no reproducible Quest setup was found in this repository. Native Quest and physical Halo behavior remain unverified.
+
+## Detailed agreements
+
+Each agreement records inputs, outputs, ownership, failure behavior, and how to test it:
+
+[Shared rules](contracts/SHARED.md) · [App](contracts/APP.md) · [AI](contracts/AI.md) · [Connection](contracts/CONNECTION.md) · [Screen](contracts/SCREEN.md) · [Reader](contracts/READER.md) · [Testing](contracts/TESTING.md)

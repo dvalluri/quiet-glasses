@@ -1,6 +1,8 @@
-# Display service v0.1
+# Screen — agreement v0.1
 
-Owner: Display Codex agent.
+Fits and draws the text. Clears it locally when dismissed, even if AI or the host is stuck.
+
+Assigned Codex agent: Screen.
 
 ## Boundary
 
@@ -34,4 +36,4 @@ Current limits: printable ASCII, host layout 28 columns × six lines, Lua text l
 
 Check blank startup, static snapshot, stale/repeated activation rejection, local dismissal under host stall and notification failure, and ten repeated physical cycles for the selected backend. Measure application-observed dismissal ≤250 ms as a target, separately recording physical input recognition delay. Report failures.
 
-First dispatch: with Transport, reproduce the reported Quest browser display, establish a local clear path and one public static fixture. Capture readability and dismissal evidence before attaching streaming. Native spatial rendering remains a separate unverified capability.
+First dispatch: with Connection, reproduce the reported Quest browser display, establish a local clear path and one public static fixture. Capture readability and dismissal evidence before attaching streaming. Native spatial rendering remains a separate unverified capability.

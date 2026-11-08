@@ -4,11 +4,11 @@ Status: target contracts. Existing implementations and wire semantics remain aut
 
 ## Common rules
 
-- Session is the sole owner of increasing request generations `g` and display snapshot sequence `s`. Reserve generation 0 for the initial clear/no-request state; activations allocate positive generations and snapshots use positive sequences. Providers do not invent IDs.
-- At most one request may produce display writes and one display snapshot may await acknowledgement. Any abandoned cleanup task is quarantined and cannot write, even if it ignores cancellation. Display receives complete snapshots, not token deltas. Cancelled work cannot acquire a new generation.
+- App is the sole owner of increasing request generations `g` and display snapshot sequence `s`. Reserve generation 0 for the initial clear/no-request state; activations allocate positive generations and snapshots use positive sequences. Providers do not invent IDs.
+- At most one request may produce display writes and one display snapshot may await acknowledgement. Any abandoned cleanup task is quarantined and cannot write, even if it ignores cancellation. Screen receives complete snapshots, not token deltas. Cancelled work cannot acquire a new generation.
 - Lifecycle commands are serialized. Local dismissal is a priority event: clear first, then best-effort notification and cancellation; no wait for inference.
 - Producer work ends once with completed, cancelled, or failed status, independently of display visibility. Completion may leave its answer visible until dismissal; later dismissal changes visibility without emitting a second producer outcome. Only still-running work is cancelled on dismissal. Failures attempt clear. A broken link means blankness is unknown until locally observed.
-- Transport `send` acceptance is not device processing. `DRAWN` is completion of drawing calls, not proof of optical visibility. Dismissal is not secure erasure.
+- Connection `send` acceptance is not device processing. `DRAWN` is completion of drawing calls, not proof of optical visibility. Dismissal is not secure erasure.
 - Current defaults: activation/draw acknowledgement 1 second; total answer 60 seconds; local HTTP connect 2 seconds and read 30 seconds. Proposed provider cleanup budget: 1 second. These are software deadlines, not measured physical performance.
 - Cleanup timeout reports failure without blocking local clear or accepting stale output. A provider that ignores cancellation must be isolated from future display writes.
 - No automatic text replay after reconnect. Current v1 has no connection epoch; a new host session cannot assume its reset generation counter is safe against a still-running device. Until a verified reset/handshake exists, reject recovery rather than reuse uncertain state.
@@ -33,7 +33,7 @@ VerificationReport(candidate_commit, contract_version, environment,
   checks[{criterion, outcome=pass|fail|blocked, evidence}], limitations)
 ```
 
-Session associates tasks and errors with its request generation; an untagged late result from another task is never applied to the current request.
+App associates tasks and errors with its request generation; an untagged late result from another task is never applied to the current request.
 
 ## Compatibility and changes
 

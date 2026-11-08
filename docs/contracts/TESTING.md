@@ -1,6 +1,8 @@
-# Verification and release service v0.1
+# Testing — agreement v0.1
 
-Owner: Verification Codex agent. Reports independently to the integrator and principal.
+Tries the assembled app and records what actually worked, what failed, and which hardware claims still lack evidence.
+
+Assigned Codex agent: Testing. Reports evidence to the coordinating agent and Dinesh.
 
 ## Boundary
 
